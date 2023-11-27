@@ -49,6 +49,7 @@ class COIN_CMD(LpSolver_CMD):
         mip=True,
         msg=True,
         timeLimit=None,
+        hardTimeLimit=None,
         fracGap=None,
         maxSeconds=None,
         gapRel=None,
@@ -65,12 +66,12 @@ class COIN_CMD(LpSolver_CMD):
         timeMode="elapsed",
         mip_start=False,
         maxNodes=None,
-        hardTimeLimit=None,
     ):
         """
         :param bool mip: if False, assume LP even if integer variables
         :param bool msg: if False, no log is shown
         :param float timeLimit: maximum time for solver (in seconds)
+        :param bool hardTimeLimit: A hard time limit that kills the solver process when reached.  Necessary if the solver itself hangs.
         :param float gapRel: relative gap tolerance for the solver to stop (in fraction)
         :param float gapAbs: absolute gap tolerance for the solver to stop
         :param int threads: sets the maximum number of threads
@@ -87,7 +88,6 @@ class COIN_CMD(LpSolver_CMD):
         :param str timeMode: "elapsed": count wall-time to timeLimit; "cpu": count cpu-time
         :param bool mip_start: deprecated for warmStart
         :param int maxNodes: max number of nodes during branching. Stops the solving when reached.
-        :param bool hardTimeLimit: A hard time limit that kills the solver process when reached.  Necessary if the solver itself hangs.
         """
 
         if fracGap is not None:
@@ -118,6 +118,7 @@ class COIN_CMD(LpSolver_CMD):
             mip=mip,
             msg=msg,
             timeLimit=timeLimit,
+            hardTimeLimit=hardTimeLimit,
             presolve=presolve,
             cuts=cuts,
             strong=strong,
@@ -130,7 +131,6 @@ class COIN_CMD(LpSolver_CMD):
             logPath=logPath,
             timeMode=timeMode,
             maxNodes=maxNodes,
-            hardTimeLimit=hardTimeLimit,
         )
 
     def copy(self):
@@ -401,6 +401,7 @@ class PULP_CBC_CMD(COIN_CMD):
             mip=True,
             msg=True,
             timeLimit=None,
+            hardTimeLimit=None,
             fracGap=None,
             maxSeconds=None,
             gapRel=None,
@@ -416,7 +417,6 @@ class PULP_CBC_CMD(COIN_CMD):
             logPath=None,
             mip_start=False,
             timeMode="elapsed",
-            killOnTimeLimit=False,
         ):
             if path is not None:
                 raise PulpSolverError("Use COIN_CMD if you want to set a path")
@@ -427,6 +427,7 @@ class PULP_CBC_CMD(COIN_CMD):
                 mip=mip,
                 msg=msg,
                 timeLimit=timeLimit,
+                hardTimeLimit=hardTimeLimit,
                 fracGap=fracGap,
                 maxSeconds=maxSeconds,
                 gapRel=gapRel,
@@ -441,7 +442,6 @@ class PULP_CBC_CMD(COIN_CMD):
                 logPath=logPath,
                 mip_start=mip_start,
                 timeMode=timeMode,
-                killOnTimeLimit=killOnTimeLimit
             )
 
 

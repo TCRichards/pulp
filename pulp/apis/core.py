@@ -216,7 +216,7 @@ class LpSolver:
         self.timeLimit = timeLimit
 
         # here we will store all other relevant information including:
-        # gapRel, gapAbs, maxMemory, maxNodes, threads, logPath, timeMode, killOnTimeLimit
+        # gapRel, gapAbs, maxMemory, maxNodes, threads, logPath, timeMode, hardTimeLimit, etc.
         self.optionsDict = {k: v for k, v in kwargs.items() if v is not None}
 
     def available(self):

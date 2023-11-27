@@ -1516,21 +1516,21 @@ class BaseSolverTest:
                 return
 
             @contextmanager
-            def enableKillOnTimeLimit(timeLimit: float = 5):
-                # A context manager that lets us temperarily enable killOnTimeLimit and set a time limit
-                origKillSetting = self.solver.optionsDict.get("killOnTimeLimit", False)
+            def enableHardTimeLimit(timeLimit: float = 5, hardTimeLimit: float = 10):
+                # A context manager that lets us temperarily enable hardTimeLimit and set a time limit
+                origHardLimit = self.solver.optionsDict.get("HardTimeLimit", None)
                 origTimeLimit = self.solver.timeLimit
-                self.solver.optionsDict["killOnTimeLimit"] = True
+                self.solver.optionsDict["HardTimeLimit"] = hardTimeLimit
                 self.solver.timeLimit = timeLimit
                 try:
                     yield
                 finally:
-                    self.solver.optionsDict["killOnTimeLimit"] = origKillSetting
+                    self.solver.optionsDict["HardTimeLimit"] = origHardLimit
                     self.solver.timeLimit = origTimeLimit
 
             hangFilePath = os.path.join(os.path.dirname(__file__), "cbc_hang.test_mps")
             _, prob = LpProblem.fromMPS(hangFilePath)
-            with enableKillOnTimeLimit(timeLimit=5):
+            with enableHardTimeLimit(timeLimit=5, hardTimeLimit=10):
                 try:
                     prob.solve(self.solver)
                 except PulpTimeoutError:
