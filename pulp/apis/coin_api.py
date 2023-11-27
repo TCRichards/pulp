@@ -65,7 +65,7 @@ class COIN_CMD(LpSolver_CMD):
         timeMode="elapsed",
         mip_start=False,
         maxNodes=None,
-        killOnTimeLimit=False,
+        hardTimeLimit=None,
     ):
         """
         :param bool mip: if False, assume LP even if integer variables
@@ -87,7 +87,7 @@ class COIN_CMD(LpSolver_CMD):
         :param str timeMode: "elapsed": count wall-time to timeLimit; "cpu": count cpu-time
         :param bool mip_start: deprecated for warmStart
         :param int maxNodes: max number of nodes during branching. Stops the solving when reached.
-        :param bool killOnTimeLimit: If the solver takes more than 10 seconds than the time limit to stop, kill it and raise an error.
+        :param bool hardTimeLimit: A hard time limit that kills the solver process when reached.  Necessary if the solver itself hangs.
         """
 
         if fracGap is not None:
@@ -130,7 +130,7 @@ class COIN_CMD(LpSolver_CMD):
             logPath=logPath,
             timeMode=timeMode,
             maxNodes=maxNodes,
-            killOnTimeLimit=killOnTimeLimit,
+            hardTimeLimit=hardTimeLimit,
         )
 
     def copy(self):
@@ -210,11 +210,11 @@ class COIN_CMD(LpSolver_CMD):
 
         # Optionally implement a timeout that kills the process if it takes too long
         timer = None
-        if self.optionsDict.get('killOnTimeLimit', False) and self.timeLimit is not None:
+        hardTimeLimit = self.optionsDict.get('hardTimeLimit')
+        if hardTimeLimit is not None:
             # Give the solver a buffer above the time limit before we kill it
             # since it's better for the solver to timeout gracefully
-            buffer_time = 10 
-            timer = Timer(self.timeLimit + buffer_time, cbc.kill)
+            timer = Timer(float(hardTimeLimit), cbc.kill)
             timer.start()
 
         try:

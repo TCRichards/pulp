@@ -43,6 +43,7 @@ class GLPK_CMD(LpSolver_CMD):
         msg=True,
         options=None,
         timeLimit=None,
+        hardTimeLimit=None,
     ):
         """
         :param bool mip: if False, assume LP even if integer variables
@@ -51,6 +52,7 @@ class GLPK_CMD(LpSolver_CMD):
         :param list options: list of additional options to pass to solver
         :param bool keepFiles: if True, files are saved in the current directory and not deleted after solving
         :param str path: path to the solver binary
+        :param bool hardTimeLimit: A hard time limit that kills the solver process when reached.  Necessary if the solver itself hangs.
         """
         LpSolver_CMD.__init__(
             self,
